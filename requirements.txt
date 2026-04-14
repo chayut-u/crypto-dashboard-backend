@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+apscheduler
+httpx
+python-dotenv
+slowapi
+openai
+pydantic-settings
