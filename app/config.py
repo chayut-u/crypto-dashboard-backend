@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     line_notify_token: str = ""
     openai_api_key: str = ""
     alert_score_threshold: int = 60
+    interesting_score_threshold: int = 70
+    buyback_wallet_account_index: str = "0"
     monitor_interval_minutes: int = 10
     daily_summary_hour: int = 9
 

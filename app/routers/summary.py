@@ -17,28 +17,59 @@ def get_summary(db: Session = Depends(get_db)):
     alert_repository = AlertRepository(db)
     analysis_repository = AnalysisRepository(db)
 
-    transactions = transaction_repository.list_recent(limit=10)
+    transactions = transaction_repository.list_recent(limit=20)
+    interesting_transactions = transaction_repository.list_interesting(limit=10)
     alerts = alert_repository.list_recent(limit=10)
     latest_analysis = analysis_repository.get_latest()
 
     data = {
         "stats": {
-            "recent_transactions": len(transactions),
+            "recent_transactions": transaction_repository.count_recent(),
             "recent_alerts": len(alerts),
+            "interesting_movements": transaction_repository.count_interesting(),
+            "tracked_wallets": transaction_repository.count_distinct_wallets(),
         },
         "latest_analysis": None,
         "latest_transactions": [
             {
                 "id": item.id,
                 "source": item.source,
+                "category": item.category,
+                "tx_type": item.tx_type,
                 "amount": item.amount,
                 "symbol": item.symbol,
                 "wallet_address": item.wallet_address,
+                "account_index": item.account_index,
                 "exchange_name": item.exchange_name,
+                "direction": item.direction,
+                "unit_price": item.unit_price,
+                "quote_amount": item.quote_amount,
+                "event_timestamp": item.event_timestamp,
+                "is_interesting": item.is_interesting,
+                "interesting_reason": item.interesting_reason,
                 "created_at": item.created_at,
                 "description": item.description,
             }
             for item in transactions
+        ],
+        "interesting_transactions": [
+            {
+                "id": item.id,
+                "source": item.source,
+                "category": item.category,
+                "tx_type": item.tx_type,
+                "amount": item.amount,
+                "symbol": item.symbol,
+                "wallet_address": item.wallet_address,
+                "account_index": item.account_index,
+                "direction": item.direction,
+                "quote_amount": item.quote_amount,
+                "event_timestamp": item.event_timestamp,
+                "interesting_reason": item.interesting_reason,
+                "created_at": item.created_at,
+                "description": item.description,
+            }
+            for item in interesting_transactions
         ],
     }
 
